@@ -9,6 +9,7 @@ import {
 import {
   ClientProxy,
   ClientProxyFactory,
+  EventPattern,
   Transport,
 } from '@nestjs/microservices';
 import { CriarCategoriaDto } from './dtos/criar-categoria.dto';
@@ -31,6 +32,7 @@ export class AppController {
 
   @Post('categorias')
   @UsePipes(ValidationPipe)
+  @EventPattern('criar-categoria')
   async criarCategoria(@Body() CriarCategoriaDto: CriarCategoriaDto) {
     console.log('CriarCategoriaDto', CriarCategoriaDto);
     return this.clientAdminBackend.emit('criar-categoria', CriarCategoriaDto);
