@@ -23,7 +23,7 @@ export class AppController {
     this.clientAdminBackend = ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
-        urls: ['amqp://poring86:test@localhost:5672/smartranking'],
+        urls: ['amqp://guest:guest@localhost:5672/smartranking'],
         queue: 'admin-backend',
       },
     });
@@ -32,11 +32,7 @@ export class AppController {
   @Post('categorias')
   @UsePipes(ValidationPipe)
   async criarCategoria(@Body() CriarCategoriaDto: CriarCategoriaDto) {
-    console.log('passou aqui');
-    try {
-      return this.clientAdminBackend.emit('criar-categoria', CriarCategoriaDto);
-    } catch (e) {
-      console.log(e);
-    }
+    console.log('CriarCategoriaDto', CriarCategoriaDto);
+    return this.clientAdminBackend.emit('criar-categoria', CriarCategoriaDto);
   }
 }
