@@ -1,23 +1,21 @@
 import {
   Body,
   Controller,
-  Logger,
+  Get,
   Post,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import {
   ClientProxy,
   ClientProxyFactory,
-  EventPattern,
   Transport,
 } from '@nestjs/microservices';
 import { CriarCategoriaDto } from './dtos/criar-categoria.dto';
 
 @Controller('api/v1')
 export class AppController {
-  private logger = new Logger(AppController.name);
-
   private clientAdminBackend: ClientProxy;
 
   constructor() {
@@ -32,9 +30,13 @@ export class AppController {
 
   @Post('categorias')
   @UsePipes(ValidationPipe)
-  @EventPattern('criar-categoria')
-  async criarCategoria(@Body() CriarCategoriaDto: CriarCategoriaDto) {
+  criarCategoria(@Body() CriarCategoriaDto: CriarCategoriaDto) {
     console.log('CriarCategoriaDto', CriarCategoriaDto);
-    return this.clientAdminBackend.emit('criar-categoria', CriarCategoriaDto);
+    this.clientAdminBackend.emit('criar-categoria', CriarCategoriaDto);
+  }
+
+  @Get('categorias')
+  consultarCategorias(@Query('idCategoria') _id: string) {
+    return this.clientAdminBackend.send('consultar-categorias', _id ? _id : '');
   }
 }
