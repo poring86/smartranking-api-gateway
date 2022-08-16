@@ -2,7 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
@@ -12,6 +14,7 @@ import {
   ClientProxyFactory,
   Transport,
 } from '@nestjs/microservices';
+import { AtualizarCategoriaDto } from './dtos/atualizar-categoria.dto';
 import { CriarCategoriaDto } from './dtos/criar-categoria.dto';
 
 @Controller('api/v1')
@@ -38,5 +41,17 @@ export class AppController {
   @Get('categorias')
   consultarCategorias(@Query('idCategoria') _id: string) {
     return this.clientAdminBackend.send('consultar-categorias', _id ? _id : '');
+  }
+
+  @Put('categorias/:_id')
+  @UsePipes(ValidationPipe)
+  async atualizarCategoria(
+    @Body() atualizarCategoriaDto: AtualizarCategoriaDto,
+    @Param('_id') _id: string,
+  ) {
+    this.clientAdminBackend.emit('atualizar-categoria', {
+      id: _id,
+      categoria: atualizarCategoriaDto,
+    });
   }
 }
