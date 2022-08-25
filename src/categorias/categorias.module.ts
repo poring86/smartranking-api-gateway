@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ProxyRMQModule } from 'src/proxyrmq/proxyrmq.module';
-import { CategoriaController } from './categoria.controller';
+import { CategoriasController } from './categorias.controller';
 
 @Module({
   imports: [ProxyRMQModule],
-  controllers: [CategoriaController],
+  controllers: [CategoriasController],
 })
-export class CategoriaModule {}
+export class CategoriasModule {}
