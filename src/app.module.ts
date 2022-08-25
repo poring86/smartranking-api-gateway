@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { CategoriasModule } from './categorias/categorias.module';
+import { ClientProxySmartRanking } from './proxyrmq/client-proxy';
+import { ProxyRMQModule } from './proxyrmq/proxyrmq.module';
 
 @Module({
-  imports: [CategoriasModule],
-  controllers: [AppController],
-  providers: [],
+  imports: [CategoriasModule, ProxyRMQModule],
+  controllers: [],
+  providers: [ClientProxySmartRanking],
 })
 export class AppModule {}
