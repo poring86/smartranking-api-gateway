@@ -9,8 +9,8 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { AtualizarCategoriaDto } from 'src/dtos/atualizar-categoria.dto';
-import { CriarCategoriaDto } from 'src/dtos/criar-categoria.dto';
+import { AtualizarCategoriaDto } from 'src/categorias/dtos/atualizar-categoria.dto';
+import { CriarCategoriaDto } from 'src/categorias/dtos/criar-categoria.dto';
 import { ClientProxySmartRanking } from 'src/proxyrmq/client-proxy';
 
 @Controller('api/v1/categorias')
