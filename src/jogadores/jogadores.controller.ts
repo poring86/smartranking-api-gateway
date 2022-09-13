@@ -53,9 +53,26 @@ export class JogadoresController {
   @Post('/:_id/upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadArquivo(@UploadedFile() file, @Param('_id') _id: string) {
-    console.log('_id', _id);
-    const data = await this.awsService.uploadArquivo(file, _id);
-    return data;
+    const jogador = await this.clientAdminBackend
+      .send('consultar-jogadores', _id)
+      .toPromise();
+
+    if (!jogador) {
+      throw new BadRequestException();
+    }
+
+    const urlFotoJogador = await this.awsService.uploadArquivo(file, _id);
+
+    const atualizarJogadorDto: AtualizarJogadorDto = {};
+
+    atualizarJogadorDto.urlFotoJogador = urlFotoJogador.url;
+
+    await this.clientAdminBackend.emit('atualizar-jogador', {
+      id: _id,
+      jogador: atualizarJogadorDto,
+    });
+
+    return this.clientAdminBackend.send('consultar-jogadores', _id);
   }
 
   @Get()
