@@ -3,9 +3,19 @@ import { CategoriasModule } from './categorias/categorias.module';
 import { JogadoresModule } from './jogadores/jogadores.module';
 import { ClientProxySmartRanking } from './proxyrmq/client-proxy';
 import { ProxyRMQModule } from './proxyrmq/proxyrmq.module';
+import { AwsModule } from './aws/aws.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [JogadoresModule, CategoriasModule, ProxyRMQModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    JogadoresModule,
+    CategoriasModule,
+    ProxyRMQModule,
+    AwsModule,
+  ],
   controllers: [],
   providers: [ClientProxySmartRanking],
 })

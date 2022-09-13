@@ -11,18 +11,25 @@ import {
   Param,
   BadRequestException,
   Delete,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CriarJogadorDto } from './dtos/criar-jogador.dto';
 import { AtualizarJogadorDto } from './dtos/atualizar-jogador.dto';
 import { Observable } from 'rxjs';
 import { ClientProxySmartRanking } from '../proxyrmq/client-proxy';
 import { ValidacaoParametrosPipe } from '../common/pipes/validacao-parametros.pipe';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadedFile } from '@nestjs/common/decorators';
+import { AwsService } from 'src/aws/aws.service';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
   private logger = new Logger(JogadoresController.name);
 
-  constructor(private clientProxySmartRanking: ClientProxySmartRanking) {}
+  constructor(
+    private clientProxySmartRanking: ClientProxySmartRanking,
+    private awsService: AwsService,
+  ) {}
 
   private clientAdminBackend =
     this.clientProxySmartRanking.getClientProxyAdminBackendInstance();
@@ -41,6 +48,14 @@ export class JogadoresController {
     } else {
       throw new BadRequestException(`Categoria não cadastrada!`);
     }
+  }
+
+  @Post('/:id/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadArquivo(@UploadedFile() file, @Param('_id') _id: string) {
+    console.log('secret', process.env.S3_ACCESS_KEY_ID);
+    const data = await this.awsService.uploadArquivo(file, _id);
+    return data;
   }
 
   @Get()
