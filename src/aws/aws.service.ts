@@ -33,8 +33,10 @@ export class AwsService {
       .putObject(params)
       .promise()
       .then(
-        (data) => {
-          return data;
+        () => {
+          return {
+            url: `https://matheus86.s3.amazonaws.com/${urlKey}`,
+          };
         },
         (err) => {
           console.log(err);
