@@ -50,10 +50,10 @@ export class JogadoresController {
     }
   }
 
-  @Post('/:id/upload')
+  @Post('/:_id/upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadArquivo(@UploadedFile() file, @Param('_id') _id: string) {
-    console.log('secret', process.env.S3_ACCESS_KEY_ID);
+    console.log('_id', _id);
     const data = await this.awsService.uploadArquivo(file, _id);
     return data;
   }
