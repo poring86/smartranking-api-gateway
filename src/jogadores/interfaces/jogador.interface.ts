@@ -1,4 +1,5 @@
 export interface Jogador {
+  categoria: string;
   readonly _id: string;
   readonly telefoneCelular: string;
   readonly email: string;

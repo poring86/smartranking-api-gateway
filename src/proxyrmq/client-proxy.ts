@@ -10,16 +10,26 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class ClientProxySmartRanking {
   constructor(private configService: ConfigService) {}
-  getClientProxyAdminBackendInstance(): ClientProxy {
-    const rmqUser = this.configService.get<string>('RMQ_USER');
-    const rmqPassword = this.configService.get<string>('RMQ_PASSWORD');
-    const rmqUrl = this.configService.get<string>('RMQ_URL');
 
+  rmqUser = this.configService.get<string>('RMQ_USER');
+  rmqPassword = this.configService.get<string>('RMQ_PASSWORD');
+  rmqUrl = this.configService.get<string>('RMQ_URL');
+
+  getClientProxyAdminBackendInstance(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
-        urls: [`amqp://${rmqUser}:${rmqPassword}@${rmqUrl}`],
+        urls: [`amqp://${this.rmqUser}:${this.rmqPassword}@${this.rmqUrl}`],
         queue: 'admin-backend',
+      },
+    });
+  }
+  getClientProxyDesafiosInstance(): ClientProxy {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [`amqp://${this.rmqUser}:${this.rmqPassword}@${this.rmqUrl}`],
+        queue: 'desafios',
       },
     });
   }
