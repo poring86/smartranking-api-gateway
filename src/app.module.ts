@@ -5,8 +5,8 @@ import { ClientProxySmartRanking } from './proxyrmq/client-proxy';
 import { ProxyRMQModule } from './proxyrmq/proxyrmq.module';
 import { AwsModule } from './aws/aws.module';
 import { ConfigModule } from '@nestjs/config';
-import { DesafiosController } from './desafios/desafios.controller';
 import { DesafiosService } from './desafios/desafios.service';
+import { DesafiosModule } from './desafios/desafios.module';
 
 @Module({
   imports: [
@@ -17,8 +17,8 @@ import { DesafiosService } from './desafios/desafios.service';
     CategoriasModule,
     ProxyRMQModule,
     AwsModule,
+    DesafiosModule,
   ],
-  controllers: [DesafiosController],
   providers: [ClientProxySmartRanking, DesafiosService],
 })
 export class AppModule {}
