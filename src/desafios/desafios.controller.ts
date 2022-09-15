@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -153,6 +154,7 @@ export class DesafiosController {
     await this.clientDesafios.emit('criar-partida', partida);
   }
 
+  @Delete('/:_id')
   async deletarDesafio(@Param('_id') _id: string) {
     const desafio: Desafio = await this.clientDesafios
       .send('consultar-desafios', { idJogador: '', _id: _id })
