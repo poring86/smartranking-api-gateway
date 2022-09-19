@@ -52,26 +52,26 @@ export class DesafiosController {
           `O jogador ${jogadorFilter[0]._id} não faz parte da categoria informada!`,
         );
       }
-
-      const solicitanteEhJogadorDaPartida: Jogador[] =
-        criarDesafioDto.jogadores.filter(
-          (jogador) => jogador._id == criarDesafioDto.solicitante,
-        );
-      if (solicitanteEhJogadorDaPartida.length == 0) {
-        throw new BadRequestException(
-          `O solicitante deve ser um jogador da partida!`,
-        );
-      }
-
-      const categoria = await this.clientAdminBackend
-        .send('consultar-categorias', criarDesafioDto.categoria)
-        .toPromise();
-      if (!categoria) {
-        throw new BadRequestException(`Categoria informada não existe!`);
-      }
-
-      await this.clientDesafios.emit('criar-desafio', criarDesafioDto);
     });
+
+    const solicitanteEhJogadorDaPartida: Jogador[] =
+      criarDesafioDto.jogadores.filter(
+        (jogador) => jogador._id == criarDesafioDto.solicitante,
+      );
+    if (solicitanteEhJogadorDaPartida.length == 0) {
+      throw new BadRequestException(
+        `O solicitante deve ser um jogador da partida!`,
+      );
+    }
+
+    const categoria = await this.clientAdminBackend
+      .send('consultar-categorias', criarDesafioDto.categoria)
+      .toPromise();
+    if (!categoria) {
+      throw new BadRequestException(`Categoria informada não existe!`);
+    }
+
+    this.clientDesafios.emit('criar-desafio', criarDesafioDto);
   }
 
   @Get()
@@ -100,7 +100,6 @@ export class DesafiosController {
       .send('consultar-desafios', { idJogador: '', _id: _id })
       .toPromise();
 
-    console.log(`desafio: ${JSON.stringify(desafio)}`);
     if (!desafio) {
       throw new BadRequestException(`Desafio não cadastrado!`);
     }
@@ -110,7 +109,7 @@ export class DesafiosController {
       );
     }
 
-    await this.clientDesafios.emit('atualizar-desafio', {
+    this.clientDesafios.emit('atualizar-desafio', {
       id: _id,
       desafio: atualizarDesafioDto,
     });
@@ -151,7 +150,7 @@ export class DesafiosController {
     partida.jogadores = desafio.jogadores;
     partida.resultado = atribuirDesafioPartidaDto.resultado;
 
-    await this.clientDesafios.emit('criar-partida', partida);
+    this.clientDesafios.emit('criar-partida', partida);
   }
 
   @Delete('/:_id')
@@ -166,6 +165,6 @@ export class DesafiosController {
       throw new BadRequestException(`Desafio não cadastrado!`);
     }
 
-    await this.clientDesafios.emit('deletar-desafio', desafio);
+    this.clientDesafios.emit('deletar-desafio', desafio);
   }
 }
