@@ -11,36 +11,29 @@ import {
 } from '@nestjs/common';
 import { AtualizarCategoriaDto } from 'src/categorias/dtos/atualizar-categoria.dto';
 import { CriarCategoriaDto } from 'src/categorias/dtos/criar-categoria.dto';
-import { ClientProxySmartRanking } from 'src/proxyrmq/client-proxy';
+import { CategoriasService } from './categorias.service';
 
 @Controller('api/v1/categorias')
 export class CategoriasController {
-  constructor(private clientProxySmartRanking: ClientProxySmartRanking) {}
-
-  private clientAdminBackend =
-    this.clientProxySmartRanking.getClientProxyAdminBackendInstance();
+  constructor(private categoriasService: CategoriasService) {}
 
   @Post()
   @UsePipes(ValidationPipe)
-  criarCategoria(@Body() CriarCategoriaDto: CriarCategoriaDto) {
-    console.log('CriarCategoriaDto', CriarCategoriaDto);
-    this.clientAdminBackend.emit('criar-categoria', CriarCategoriaDto);
+  criarCategoria(@Body() criarCategoriaDto: CriarCategoriaDto) {
+    this.categoriasService.criarCategoria(criarCategoriaDto);
   }
 
   @Get()
-  consultarCategorias(@Query('idCategoria') _id: string) {
-    return this.clientAdminBackend.send('consultar-categorias', _id ? _id : '');
+  async consultarCategorias(@Query('idCategoria') _id: string) {
+    return await this.categoriasService.consultarCategorias(_id);
   }
 
   @Put('categorias/:_id')
   @UsePipes(ValidationPipe)
-  async atualizarCategoria(
+  atualizarCategoria(
     @Body() atualizarCategoriaDto: AtualizarCategoriaDto,
     @Param('_id') _id: string,
   ) {
-    this.clientAdminBackend.emit('atualizar-categoria', {
-      id: _id,
-      categoria: atualizarCategoriaDto,
-    });
+    this.categoriasService.atualizarCategoria(atualizarCategoriaDto, _id);
   }
 }
