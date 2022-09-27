@@ -5,7 +5,7 @@ import { AwsService } from './aws.service';
 
 @Module({
   imports: [],
-  providers: [AwsService, AwsCognitoConfig],
+  providers: [AwsService, AwsCognitoConfig, AwsCognitoService],
   exports: [AwsService, AwsCognitoConfig, AwsCognitoService],
 })
 export class AwsModule {}
