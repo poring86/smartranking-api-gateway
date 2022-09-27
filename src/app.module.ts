@@ -7,6 +7,7 @@ import { AwsModule } from './aws/aws.module';
 import { ConfigModule } from '@nestjs/config';
 import { DesafiosModule } from './desafios/desafios.module';
 import { RankingsModule } from './rankings/rankings.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { RankingsModule } from './rankings/rankings.module';
     AwsModule,
     DesafiosModule,
     RankingsModule,
+    AuthModule,
   ],
   providers: [ClientProxySmartRanking],
 })
