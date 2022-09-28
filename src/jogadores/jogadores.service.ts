@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { AwsService } from 'src/aws/aws.service';
+import { AwsS3Service } from 'src/aws/aws-s3.service';
 import { Categoria } from 'src/categorias/interfaces/categoria.interface';
 import { CriarJogadorDto } from 'src/jogadores/dtos/criar-jogador.dto';
 import { Jogador } from 'src/jogadores/interfaces/jogador.interface';
@@ -10,7 +10,7 @@ import { AtualizarJogadorDto } from './dtos/atualizar-jogador.dto';
 export class JogadoresService {
   constructor(
     private clientProxySmartRanking: ClientProxySmartRanking,
-    private awsService: AwsService,
+    private awsS3Service: AwsS3Service,
   ) {}
 
   private clientAdminBackend =
@@ -40,11 +40,11 @@ export class JogadoresService {
       throw new BadRequestException(`Jogador não encontrado!`);
     }
 
+    console.log('file', file);
+
     //Enviar o arquivo para o S3 e recuperar a URL de acesso
-    const urlFotoJogador: { url: '' } = await this.awsService.uploadArquivo(
-      file,
-      _id,
-    );
+    const urlFotoJogador: { url: string } =
+      await this.awsS3Service.uploadArquivo(file, _id);
 
     //Atualizar o atributo URL da entidade jogador
     const atualizarJogadorDto: AtualizarJogadorDto = {};
